@@ -3,7 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Address\Address;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -60,10 +63,35 @@ class User extends Authenticatable
         ];
     }
 
+    public function getApiResponseAsSellerAttribute()
+    {
+        $productIds = $this->products()->pluck('id');
+
+        return [
+            'username' => $this->username,
+            'store_name' => $this->store_name,
+            'photo_url' => $this->photo_url,
+            'product_count' => $this->products()->count(),
+            'rating_count' => Review::whereIn('product_id', $productIds)->count(),
+            'join_date' => $this->created_at->diffForHumans(),
+            'send_from' => optional($this->addresses()->where('is_default', true)->first())->getApiResponseAttribute()
+        ];
+    }
+
     public function getPhotoUrlAttribute(){
         if (is_null($this->photo)) {
             return null;
         }
         return asset('storage/'.$this->photo);
+    }
+
+    /**
+     * Get all of the Address for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
     }
 }

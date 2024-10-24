@@ -9,6 +9,13 @@ class Category extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    // protected $fillable = [
+    //     'parent_id',
+    //     'slug',
+    //     'name',
+    //     'icon',
+    //     'description',
+    // ];
 
     public function childs()
     {
@@ -35,6 +42,16 @@ class Category extends Model
             'slug'=>$this->slug,
             'name'=>$this->name,
             'description'=>$this->description
+        ];
+    }
+
+    public function getApiResponseWithParentAttribute()
+    {
+        return [
+            'slug' => $this->slug,
+            'name' => $this->name,
+            'description' => $this->description,
+            'parent' => optional($this->parent)->api_response_child
         ];
     }
 
