@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Address\Address;
+use App\Models\Product\Product;
+use App\Models\Product\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -93,5 +95,10 @@ class User extends Authenticatable
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'seller_id');
     }
 }
