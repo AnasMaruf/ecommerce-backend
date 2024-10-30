@@ -38,6 +38,27 @@ class HomeController extends Controller
             $products->where('name', 'LIKE', '%' . request()->search . '%');
         }
 
+        if (!is_null(request()->minimum_price)) {
+            $products->whereRaw('IF(price_sale > 0, price_sale, price) >= ?', request()->minimum_price);
+        }
+
+        if (!is_null(request()->maximum_price)) {
+            $products->whereRaw('IF(price_sale > 0, price_sale, price) <= ?', request()->maximum_price);
+        }
+
+        if (!is_null(request()->sorting_price)) {
+            $type = request()->sorting_price == 'asc' ? 'ASC' : 'DESC';
+            $products->orderByRaw('IF(price_sale > 0, price_sale, price) ' . $type);
+        } else {
+            $products->orderBy('id', 'desc');
+        }
+
+        if (!is_null(request()->categories) && is_array(request()->categories)) {
+            $products->whereHas('category', function($subQuery){
+                $subQuery->whereIn('slug', request()->categories);
+            });
+        }
+
         $products = $products->paginate(request()->per_page ?? 10);
 
         return ResponseFormatter::success($products->through(function($product){

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -44,6 +45,21 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('product/{slug}', [HomeController::class, 'getProductDetail']);
     Route::get('product/{slug}/review', [HomeController::class, 'getProductReview']);
     Route::get('seller/{username}', [HomeController::class, 'getSellerDetail']);
+
+    Route::prefix('cart')->group(function(){
+        Route::get('/', [CartController::class, 'getCart']);
+        Route::post('/', [CartController::class, 'addToCart']);
+        Route::delete('/{uuid}', [CartController::class, 'removeItemFromCart']);
+        Route::patch('/{uuid}', [CartController::class, 'updateItemFromCart']);
+
+        Route::get('/get-voucher', [CartController::class, 'getVoucher']);
+        Route::post('/apply-voucher', [CartController::class, 'applyVoucher']);
+        Route::post('/remove-voucher', [CartController::class, 'removeVoucher']);
+
+        Route::post('/update-address', [CartController::class, 'updateAddress']);
+        Route::get('/shipping', [CartController::class, 'getShipping']);
+        Route::post('/shipping-fee', [CartController::class, 'updateShippingFee']);
+    });
 
 });
 
