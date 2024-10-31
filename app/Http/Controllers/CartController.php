@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cart\Cart;
 use App\ResponseFormatter;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -384,7 +385,7 @@ class CartController extends Controller
 
         $order = \DB::transaction(function() use($cart) {
             // Create order
-            $order = auth()->user()->orders()->create([
+            $order = Auth::user()->orders()->create([
                 'seller_id' => $cart->items->first()->product->seller_id,
                 'address_id' => $cart->address_id,
                 'courier' => $cart->courier,
@@ -445,7 +446,7 @@ class CartController extends Controller
 
         $coin = 0;
         if (request()->use == 1) {
-            $balance = auth()->user()->balance;
+            $balance = Auth::user()->balance;
             $maxCoin = $cart->items->sum('total') * 0.1;
             $coin = $balance > $maxCoin ? $maxCoin : $balance;
         }
@@ -455,4 +456,5 @@ class CartController extends Controller
 
         return $this->getCart();
     }
+
 }
