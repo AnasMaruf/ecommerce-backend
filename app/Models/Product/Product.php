@@ -3,6 +3,7 @@
 namespace App\Models\Product;
 
 use App\Models\Category;
+use App\Models\Order\OrderItem;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -97,7 +98,7 @@ class Product extends Model
     }
 
     public function getSaleCountAttribute(){
-        return 0;
+        return OrderItem::where('product_id', $this->id)->count();
     }
 
     public function getApiResponseExcerptAttribute(){
@@ -151,6 +152,32 @@ class Product extends Model
             ],
             'other_product' => $this->seller->products()->where('id', '!=', $this->id)->limit(6)->get()->map(function ($product) {
                 return $product->getApiResponseExcerptAttribute();
+            }),
+        ];
+    }
+
+    public function getApiResponseSellerAttribute()
+    {
+        return [
+            'uuid' => $this->uuid,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'price' => $this->price,
+            'price_sale' => $this->price_sale ?: null,
+            'stock' => $this->stock,
+            'category' => $this->category->getApiResponseWithParentAttribute(),
+            'description' => $this->description,
+            'weight' => $this->weight,
+            'length' => $this->length,
+            'width' => $this->width,
+            'height' => $this->height,
+            'video_url' => $this->video_url,
+            'sale_count' => $this->getSaleCountAttribute(),
+            'images' => $this->images->map(function ($image) {
+                return $image->image_url;
+            }),
+            'variations' => $this->variations->map(function ($variation) {
+                return $variation->getApiResponseAttribute();
             }),
         ];
     }

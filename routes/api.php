@@ -7,6 +7,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Seller\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -71,6 +72,26 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('/{uuid}', [OrderController::class, 'show']);
         Route::post('/review/add', [OrderController::class, 'addReview']);
         Route::post('/{uuid}/mark-done', [OrderController::class, 'markAsDone']);
+    });
+
+    Route::prefix('seller-dashboard')->group(function(){
+
+        Route::apiResource('product', ProductController::class)->except([
+            'show'
+        ]);
+
+        // Route::apiResource('voucher', VoucherController::class)->except([
+        //     'show'
+        // ]);
+
+        // Route::apiResource('order', OrderController::class)->only([
+        //     'index', 'show'
+        // ]);
+        // Route::post('order/{uuid}/status', [OrderController::class, 'addStatus']);
+
+        // Route::get('wallet-transaction', [WalletController::class, 'index']);
+        // Route::get('list-bank', [WalletController::class, 'getListBank']);
+        // Route::post('withdraw', [WalletController::class, 'createWithdraw']);
     });
 });
 
