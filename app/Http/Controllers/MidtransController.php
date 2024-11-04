@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewOrderToSeller;
 use App\Models\Order\Order;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,7 @@ class MidtransController extends Controller
                     $item->product->decrement('stock', $item->qty);
                 }
 
-                // \Mail::to($order->seller->email)->send(new \App\Mail\NewOrderToSeller($order));
+                \Mail::to($order->seller->email)->send(new NewOrderToSeller($order));
             });
 
         } elseif ($transaction == 'cancel' || $transaction == 'deny') {

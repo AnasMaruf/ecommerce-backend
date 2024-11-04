@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -65,5 +66,11 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('/checkout', [CartController::class, 'checkout']);
     });
 
+    Route::prefix('order')->group(function(){
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/{uuid}', [OrderController::class, 'show']);
+        Route::post('/review/add', [OrderController::class, 'addReview']);
+        Route::post('/{uuid}/mark-done', [OrderController::class, 'markAsDone']);
+    });
 });
 

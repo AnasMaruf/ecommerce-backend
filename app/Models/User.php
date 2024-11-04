@@ -13,10 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Bavix\Wallet\Traits\HasWallet;
+use Bavix\Wallet\Interfaces\Wallet;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Wallet
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, HasWallet;
 
     /**
      * The attributes that are mass assignable.
@@ -62,7 +64,8 @@ class User extends Authenticatable
             "phone" => $this->phone,
             "store_name" => $this->store_name,
             "gender" => $this->gender,
-            "birth_date" => $this->birth_date
+            "birth_date" => $this->birth_date,
+            'balance' => (float) $this->balance,
         ];
     }
 
