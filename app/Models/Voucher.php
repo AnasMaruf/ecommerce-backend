@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Order\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,7 +41,7 @@ class Voucher extends Model
 
     public function orders()
     {
-        return $this->hasMany(\App\Models\Order\Order::class, 'voucher_id');
+        return $this->hasMany(Order::class, 'voucher_id');
     }
 
     public function getUsedCountAttribute()
