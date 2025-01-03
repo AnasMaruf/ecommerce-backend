@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cart\Cart;
+use App\Models\Product\Product;
+use App\Models\Voucher;
 use App\ResponseFormatter;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,7 +88,7 @@ class CartController extends Controller
         }
 
         $cart = $this->getOrCreateCart();
-        $product = \App\Models\Product\Product::where('uuid', request()->product_uuid)->firstOrFail();
+        $product = Product::where('uuid', request()->product_uuid)->firstOrFail();
         if ($product->stock < request()->qty) {
             return ResponseFormatter::error(400, null, [
                 'Stock tidak cukup!'
@@ -152,7 +154,7 @@ class CartController extends Controller
 
     public function getVoucher()
     {
-        $vouchers = \App\Models\Voucher::public()->active()->get();
+        $vouchers = Voucher::public()->active()->get();
 
         return ResponseFormatter::success($vouchers->pluck('api_response'));
     }
@@ -167,7 +169,7 @@ class CartController extends Controller
             return ResponseFormatter::error(400, $validator->errors());
         }
 
-        $voucher = \App\Models\Voucher::where('code', request()->voucher_code)->firstOrFail();
+        $voucher = Voucher::where('code', request()->voucher_code)->firstOrFail();
         if ($voucher->start_date > now() || $voucher->end_date < now()) {
             return ResponseFormatter::error(400, null, [
                 'Voucher tidak bisa digunakan!'

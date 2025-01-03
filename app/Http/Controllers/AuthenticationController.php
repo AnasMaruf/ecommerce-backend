@@ -53,7 +53,6 @@ class AuthenticationController extends Controller
             return ResponseFormatter::success([
                 'token' => $token
             ]);
-
         } else {
             return ResponseFormatter::error(400,null,['Invalid token']);
         }
