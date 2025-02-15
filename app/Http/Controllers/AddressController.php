@@ -23,7 +23,7 @@ class AddressController extends Controller
             $query = $query->whereIn('province_id', function($subQuery){
                 $subQuery->from('provinces')->where('uuid', request()->province_uuid)->select('id');
             });
-        }
+    }
 
         if (request()->search) {
             $query = $query->where('name', 'LIKE', '%'.request()->search.'%');
