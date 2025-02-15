@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class AddressController extends Controller
 {
     public function getProvince(){
-        $provinces = Province::get(['uuid', 'name']);
+        $provinces = cache()->remember('provinces', 3600, function(){
+            return \App\Models\Address\Province::all();
+        });
         return ResponseFormatter::success($provinces);
     }
     public function getCity(){
@@ -26,7 +28,9 @@ class AddressController extends Controller
         if (request()->search) {
             $query = $query->where('name', 'LIKE', '%'.request()->search.'%');
         }
-        $cities = $query->get();
+        $cities = cache()->remember('cities_'.request()->province_uuid.'_'.request()->search, 3600, function() use($query){
+            return $query->get();
+        });
         return ResponseFormatter::success($cities->pluck('api_response'));
     }
     /**

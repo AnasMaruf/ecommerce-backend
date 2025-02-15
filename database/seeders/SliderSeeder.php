@@ -14,10 +14,10 @@ class SliderSeeder extends Seeder
     public function run(): void
     {
         $sliders = [
-            'dummy/Banner-1.png',
-            'dummy/Banner-2.png',
-            'dummy/Banner-3.png',
-            'dummy/Banner-4.png'
+            'public/Banner-1.png',
+            'public/Banner-2.png',
+            'public/Banner-3.png',
+            'public/Banner-4.png'
         ];
 
         foreach ($sliders as $slider) {
